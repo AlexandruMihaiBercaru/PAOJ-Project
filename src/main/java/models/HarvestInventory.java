@@ -1,12 +1,14 @@
 package models;
 
+import java.util.ArrayList;
+
 public class HarvestInventory extends Inventory {
 
-    private Harvest[] harvests;
+    private ArrayList<Harvest> harvests;
 
 
     @Override
-    void listInventory() {
+    public void listInventory() {
         for(var harvest: harvests){
             System.out.println(harvest);
         }

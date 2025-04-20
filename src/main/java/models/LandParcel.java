@@ -12,7 +12,8 @@ public class LandParcel {
         this.usage = usage;
     }
 
-
-
-
+    @Override
+    public String toString() {
+        return "ID: " + parcelId + "\nSIZE: " + size + "\n";
+    }
 }

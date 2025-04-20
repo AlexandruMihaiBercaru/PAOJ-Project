@@ -2,5 +2,5 @@ package models;
 
 public abstract class Inventory {
 
-    abstract void listInventory();
+    abstract public void listInventory();
 }

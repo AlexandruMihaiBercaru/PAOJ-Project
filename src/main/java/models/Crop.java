@@ -2,25 +2,34 @@ package models;
 
 public class Crop {
 
-    private String Name;
-    private Seed usedSeed;
-    private int expectedYieldPerUnit; // kg per hectar
+    private String scientificName;
+    private String cultivar;
+    private String commonName;
+    private PlantType type;
 
-    public Crop(String Name, Seed usedSeed, int expectedYieldPerUnit) {
-        this.Name = Name;
-        this.usedSeed = usedSeed;
-        this.expectedYieldPerUnit = expectedYieldPerUnit;
+
+    public Crop(String scientificName, String cultivar, String commonName, PlantType type) {
+        this.scientificName = scientificName;
+        this.cultivar = cultivar;
+        this.commonName = commonName;
+        this.type = type;
     }
 
-    public Seed getUsedSeed() {
-        return usedSeed;
+    public String getScientificName() {
+        return scientificName;
     }
 
-    public String getName() {
-        return Name;
+    public String getCultivar() {
+        return cultivar;
     }
 
-    public int getExpectedYieldPerUnit() {
-        return expectedYieldPerUnit;
+    public String getCommonName() {
+        return commonName;
     }
+
+    public PlantType getType() {
+        return type;
+    }
+
+
 }
