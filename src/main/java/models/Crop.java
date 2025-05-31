@@ -5,10 +5,10 @@ public class Crop {
     private String scientificName;
     private String cultivar;
     private String commonName;
-    private PlantType type;
+    private PlantLifeCycle type;
 
 
-    public Crop(String scientificName, String cultivar, String commonName, PlantType type) {
+    public Crop(String scientificName, String cultivar, String commonName, PlantLifeCycle type) {
         this.scientificName = scientificName;
         this.cultivar = cultivar;
         this.commonName = commonName;
@@ -27,7 +27,7 @@ public class Crop {
         return commonName;
     }
 
-    public PlantType getType() {
+    public PlantLifeCycle getType() {
         return type;
     }
 

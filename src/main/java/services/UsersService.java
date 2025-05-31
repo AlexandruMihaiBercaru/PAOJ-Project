@@ -9,6 +9,7 @@ import java.util.Scanner;
 ///  manages all users and all farms
 public class UsersService {
 
+    //TODO: foloseste UserRepository pt a comunica cu baza de date
     private User[] allUsers;
     int currentUserIndex;
     private FarmService[] allFarms;
@@ -19,7 +20,7 @@ public class UsersService {
         currentUserIndex = 0;
 
         // create a test user and a farm
-        allUsers[currentUserIndex] = new User("john", "doe", "johnnydoe", "a1b2c3".toCharArray());
+        allUsers[currentUserIndex] = new User("john", "doe", "johnnydoe", "a1b2c3");
         allUsers[currentUserIndex].setRole("FARMER");
 
         allFarms[currentUserIndex] = new FarmService(allUsers[currentUserIndex]);
@@ -46,7 +47,7 @@ public class UsersService {
         }
 
         System.out.println("Password: ");
-        char[] password = sc.nextLine().toCharArray();
+        String password = sc.nextLine();
 
         User newUser = new User(firstName, lastName, username, password);
 
@@ -95,11 +96,11 @@ public class UsersService {
         }
 
         System.out.println("Please enter your password: ");
-        char[] inputPassword = sc.nextLine().toCharArray();
+        String inputPassword = sc.nextLine();
         while(!passwordMatches(user, inputPassword)){
             System.out.println("Invalid password, please try again...");
             System.out.println("Please enter your password: ");
-            inputPassword = sc.nextLine().toCharArray();
+            inputPassword = sc.nextLine();
         }
 
         System.out.println("Login successful!\n-----------------------------");
@@ -107,8 +108,8 @@ public class UsersService {
     }
 
 
-    private boolean passwordMatches(User user, char[] inputPassword){
-        return Arrays.equals(user.getPassword(), inputPassword);
+    private boolean passwordMatches(User user, String inputPassword){
+        return user.getEncryptedPassword().equals(inputPassword);
     }
 
 

@@ -14,7 +14,7 @@ public class SeedsLot {
     private static int internalId = 1;
 
 
-    public SeedsLot(String scientificName, String commonName, PlantType type, String cultivar,
+    public SeedsLot(String scientificName, String commonName, PlantLifeCycle type, String cultivar,
                     String plantingPeriod, String harvestingPeriod, double pricePerUnit, int plantsPerSqMeter, int expectedYieldPerSqMeter, int availableQuantity) {
         this.lotId = internalId++;
         this.cropType = new Crop(scientificName, cultivar, commonName, type);
@@ -44,7 +44,7 @@ public class SeedsLot {
 
     public static SeedsLot parseSeed(String line){
         String[] tokens = line.split(",");
-        PlantType plant = PlantType.getPlantTypeValue(tokens[2].charAt(0));
+        PlantLifeCycle plant = PlantLifeCycle.getPlantTypeValue(tokens[2].charAt(0));
         SeedsLot seedsLot = new SeedsLot(tokens[0], tokens[1], plant, tokens[3], tokens[4],
                 tokens[5], Double.parseDouble(tokens[6]), Integer.parseInt(tokens[7]), Integer.parseInt(tokens[8]), Integer.parseInt(tokens[9]));
         return seedsLot;

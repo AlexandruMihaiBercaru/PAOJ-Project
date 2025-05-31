@@ -1,3 +1,5 @@
+package view;
+
 import models.User;
 import services.FarmService;
 import services.SeedService;
@@ -135,7 +137,7 @@ public class Main {
                 """);
     }
 
-    private static void printCustomerMenu(){
+    static void printCustomerMenu(){
         System.out.println("""
                 1. View All Farms
                 0. Save changes and LogOut

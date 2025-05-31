@@ -9,7 +9,7 @@ public class Farm {
     private String email;
     private String phone;
     private double budget;
-    private ArrayList<LandParcel> farmLand;
+    private ArrayList<LandLot> farmLand;
     private ArrayList<Inventory> inventory;
 
     public Farm(String farmName, User owner, String address, String email, String phone, double budget) {
@@ -19,7 +19,7 @@ public class Farm {
         this.email = email;
         this.phone = phone;
         this.budget = budget;
-        this.farmLand = new ArrayList<LandParcel>();
+        this.farmLand = new ArrayList<LandLot>();
         this.inventory = new ArrayList<Inventory>();
 
 
@@ -45,7 +45,7 @@ public class Farm {
         return budget;
     }
 
-    public ArrayList<LandParcel> getFarmLand() {
+    public ArrayList<LandLot> getFarmLand() {
         return farmLand;
     }
 
@@ -62,7 +62,7 @@ public class Farm {
                 "PHONE: " + phone + "\n";
     }
 
-    public void addLandParcel(LandParcel newLand){
+    public void addLandParcel(LandLot newLand){
         this.farmLand.add(newLand);
     }
 

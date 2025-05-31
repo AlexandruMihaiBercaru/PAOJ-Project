@@ -3,17 +3,18 @@ package models;
 import java.util.Objects;
 
 public class User {
+    private String userId;
     private String firstName;
     private String lastName;
     private String role;
     private String username;
-    private char[] password;
+    private String encryptedPassword;
 
-    public User(String firstName, String lastName, String username, char[] password) {
+    public User(String firstName, String lastName, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
-        this.password = password;
+        this.encryptedPassword = password;
     }
 
     public String getFirstName() {
@@ -28,8 +29,8 @@ public class User {
         return role;
     }
 
-    public void setPassword(char[] password) {
-        this.password = password;
+    public void setPassword(String password) {
+        this.encryptedPassword = password;
     }
 
     public void setRole(String role) {
@@ -40,8 +41,16 @@ public class User {
         return username;
     }
 
-    public char[] getPassword() {
-        return password;
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

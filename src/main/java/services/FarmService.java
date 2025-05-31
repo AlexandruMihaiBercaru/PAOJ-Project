@@ -55,10 +55,10 @@ public class FarmService {
         System.out.println("Usage: (cultivation)"); // will be extended to include pasture, permanent crops (orchard / vineyard)
         String usage = sc.nextLine();
 
-        LandParcel newLand;
+        LandLot newLand;
         if (usage.equals("cultivation"))
         {
-            newLand = new CultivatedLand(parcelId, size, usage);
+            newLand = new ArableLand(parcelId, size, usage);
             this.farm.addLandParcel(newLand);
             System.out.println("Your farmland has just expanded!\n");
         }

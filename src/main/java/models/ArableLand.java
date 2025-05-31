@@ -4,12 +4,12 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CultivatedLand extends LandParcel{
+public class ArableLand extends LandLot {
 
     private SeedsLot seedsUsed;
     private Date plantingDate;
 
-    public CultivatedLand(String parcelId, double size, String usage) {
+    public ArableLand(String parcelId, double size, String usage) {
         super(parcelId, size, usage);
     }
 
