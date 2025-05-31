@@ -8,7 +8,7 @@ sa ofere atat servicii precum planificarea culturilor, inventarul stocurilor
 si monitorizarea animalelor, cat si sa devina o platforma prin care
 micii producatori isi pot promova produsele sau isi pot vinde recoltele, pot face troc
 cu alti comercianti sau pot organiza targuri. Scopul este acela de a crea
-un comunitate in care fermierii sa isi poata afacerile catre noi clienti.
+un comunitate in care fermierii sa isi poata promova afacerile catre noi clienti.
 
 
 ### Detalii de implementare
