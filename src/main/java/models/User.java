@@ -1,19 +1,31 @@
 package models;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class User {
-    private String userId;
+    private UUID userId;
     private String firstName;
     private String lastName;
     private String role;
     private String username;
     private String encryptedPassword;
 
-    public User(String firstName, String lastName, String username, String password) {
+
+    public User(String userId, String firstName, String lastName, String username, String role, String password) {
+        this.userId = UUID.fromString(userId);
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
+        this.role = role;
+        this.encryptedPassword = password;
+    }
+
+    public User(String firstName, String lastName, String username, String role, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.role = role;
         this.encryptedPassword = password;
     }
 
@@ -46,11 +58,11 @@ public class User {
     }
 
     public String getUserId() {
-        return userId;
+        return userId.toString();
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserId() {
+        this.userId = UUID.randomUUID();
     }
 
     @Override

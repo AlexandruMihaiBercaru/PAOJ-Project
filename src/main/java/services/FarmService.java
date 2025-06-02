@@ -1,46 +1,51 @@
 package services;
 
+import exceptions.EntityNotFoundException;
 import models.*;
+import persistence.FarmRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 ///  this class manages a single farm (all the business logic) for a given user, who is the owner of that farm
 public class FarmService {
 
+    private final FarmRepository farmRepository = FarmRepository.getInstance();
+
     private User farmOwner;
     private Farm farm;
-    private int landParcelsCount = 0;
+    //private int landParcelsCount = 0;
 
-    public FarmService(User farmOwner) {
-        this.farmOwner = farmOwner;
+    public FarmService() {
+        //this.farmOwner = farmOwner;
     }
 
-    public void newFarm(Scanner sc){
-        System.out.println("Farm name: ");
-        String name = sc.nextLine();
-        System.out.println("Address: ");
-        String address = sc.nextLine();
-        System.out.println("Email: ");
-        String email = sc.nextLine();
-        System.out.println("Phone: ");
-        String phone = sc.nextLine();
-        System.out.println("Budget: ");
-        double budget = Double.parseDouble(sc.nextLine());
-
-        Farm myFarm = new Farm(name, farmOwner, address, email, phone, budget);
-        this.farm = myFarm;
-
-        System.out.println("You have successfully added your farm!");
-
+    public Farm addNewFarm(Farm newFarm) {
+        try{
+            return farmRepository.save(newFarm);
+        } catch (Exception e) {
+            System.err.println("Could not save new farm: " + e.getMessage());
+            return null;
+        }
     }
 
-    public Farm getFarm() {
-        return farm;
+    public Farm findFarmByName(String farmName) {
+        Optional<Farm> f = farmRepository.findByNameOrId(farmName);
+        return f.orElseThrow(() -> new EntityNotFoundException("There is no farm with the name: " + farmName));
     }
 
-    public void setFarm(Farm farm) {
-        this.farm = farm;
+    public Farm findFarmByUserId(String userId){
+        Optional<Farm> f = farmRepository.findByNameOrId(userId);
+        return f.orElse(null);
     }
+
+    public ArrayList<Farm> getFarms(){
+        return (ArrayList<Farm>) farmRepository.findAll();
+    }
+
+
 
     public void checkFunds(){
         System.out.println("\nYou have " + this.farm.getBudget() + " RON left in your account.\n" +

@@ -58,7 +58,7 @@ public class SeedService {
             System.out.println("Quantity: ");
             requestQuantity = Integer.parseInt(sc.nextLine());
         }
-
+/*
         double budgetBeforeTransaction = farmService.getFarm().getBudget();
         if(budgetBeforeTransaction < requestQuantity * targetLot.getPricePerUnit()) {
             System.out.println("Insufficient funds!...");
@@ -83,7 +83,7 @@ public class SeedService {
 
             System.out.println("Your inventory has been updated!");
         }
-
+*/
 
 
     }

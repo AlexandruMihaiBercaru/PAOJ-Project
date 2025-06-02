@@ -14,25 +14,57 @@ public class DBConnection {
     private static DBConnection instance;
     private Connection connection;
 
-    public static Connection getConnectionFromInstance() {
+    // Thread-safe singleton
+    public static synchronized Connection getConnectionFromInstance() {
         if (instance == null) {
             instance = new DBConnection();
         }
+
+        // Check if connection is still valid
+        try {
+            if (instance.connection == null || instance.connection.isClosed()) {
+                instance.createConnection();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error checking connection status: " + e.getMessage());
+            instance.createConnection();
+        }
+
         return instance.connection;
     }
 
-    // constructor privat
     private DBConnection() {
-        try(Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);){
-            if (conn != null) {
-                System.out.println("Connected to the database");
-            }
-            this.connection = conn;
+        createConnection();
+    }
 
-//        }catch(ClassNotFoundException exc){
-//            System.err.println("Oracle driver not available: " + exc.getMessage());
-        } catch (SQLException exc) {
-            System.err.println("Could not connect to database: " + exc.getMessage());
+    private void createConnection() {
+        try {
+            // Load the Oracle JDBC driver
+            Class.forName(JDBC_DRIVER);
+
+            // Create connection
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+
+            if (this.connection != null) {
+                System.out.println("Connected to the database successfully");
+            }
+
+        } catch (ClassNotFoundException e) {
+            System.err.println("Oracle driver not found: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Could not connect to database: " + e.getMessage());
+        }
+    }
+
+    // close connection when the application shuts down
+    public static void closeConnection() {
+        if (instance != null && instance.connection != null) {
+            try {
+                instance.connection.close();
+                System.out.println("Database connection closed");
+            } catch (SQLException e) {
+                System.err.println("Error closing connection: " + e.getMessage());
+            }
         }
     }
 

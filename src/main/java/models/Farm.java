@@ -1,8 +1,11 @@
 package models;
 
+import utils.RandomStringGenerator;
+
 import java.util.ArrayList;
 
 public class Farm {
+    private String farmId;
     private String farmName;
     private User owner;
     private String address;
@@ -12,9 +15,9 @@ public class Farm {
     private ArrayList<LandLot> farmLand;
     private ArrayList<Inventory> inventory;
 
-    public Farm(String farmName, User owner, String address, String email, String phone, double budget) {
+    // constructor pentru ferma neinitializata (fara owner)
+    public Farm(String farmName, String address, String email, String phone, double budget) {
         this.farmName = farmName;
-        this.owner = owner;
         this.address = address;
         this.email = email;
         this.phone = phone;
@@ -22,11 +25,22 @@ public class Farm {
         this.farmLand = new ArrayList<LandLot>();
         this.inventory = new ArrayList<Inventory>();
 
+        this.farmId = RandomStringGenerator.newString(6);
 
         Inventory seedInventory = new SeedInventory();
         Inventory harvestInventory = new HarvestInventory();
         inventory.add(seedInventory);
         inventory.add(harvestInventory);
+    }
+
+    public Farm(String farmName, User owner, String address, String email, String phone, double budget){
+        this.farmName = farmName;
+        this.owner = owner;
+        this.address = address;
+        this.email = email;
+        this.phone = phone;
+        this.budget = budget;
+
     }
 
     public String getFarmName() {
@@ -85,4 +99,25 @@ public class Farm {
     public void setBudget(double budget) {
         this.budget = budget;
     }
+
+    public String getFarmId() {
+        return farmId;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public void setFarmId(String farmId) {
+        this.farmId = farmId;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
 }
+
