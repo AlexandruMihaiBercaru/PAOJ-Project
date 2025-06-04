@@ -1,5 +1,6 @@
 package view;
 
+import controllers.FarmController;
 import controllers.UserController;
 import models.User;
 
@@ -27,7 +28,7 @@ public class UserInteractions {
         }
     }
 
-    private static String getValidatedInput(Scanner sc, String inputType, Predicate<String> validator, String errorMessage) {
+    public static String getValidatedInput(Scanner sc, String inputType, Predicate<String> validator, String errorMessage) {
         String input;
         while (true) {
             System.out.print("Your " + inputType + ": ");
@@ -75,10 +76,8 @@ public class UserInteractions {
     }
 
     public static void newFarmInput(Scanner sc, UserController uc, User u){
-        System.out.println("Farm name: ");
-        String name = sc.nextLine();
-        System.out.println("Address: ");
-        String address = sc.nextLine();
+        String name = getValidatedInput(sc, "farm name", n -> n != null, "The farm name cannot be null!");
+        String address = getValidatedInput(sc, "address", ad -> ad != null, "The address cannot be null!");
 
         String email = getValidatedInput(sc, "email", UserInteractions::isValidEmail, "Wrong email format!");
 
@@ -87,7 +86,7 @@ public class UserInteractions {
         System.out.println("Current balance: ");
         double budget = Double.parseDouble(sc.nextLine());
 
-        uc.attachFarmToUser(u, name, address, email, phone, budget);
+        uc.addNewFarmToCurrentUser(u, name, address, email, phone, budget);
     }
 
     private static boolean isValidEmail(String email) {
@@ -124,5 +123,17 @@ public class UserInteractions {
         }
 
         return uc.login(username);
+    }
+
+    public static void updateContactInformation(Scanner sc, FarmController fc){
+
+        String email = getValidatedInput(sc, "email", UserInteractions::isValidEmail, "Wrong email format!");
+
+        String phone = getValidatedInput(sc, "phone", UserInteractions::isValidPhone, "Wrong phone number format!");
+
+        fc.saveEmailPhone(email, phone);
+
+        System.out.println("The contact information has been updated.\n");
+
     }
 }

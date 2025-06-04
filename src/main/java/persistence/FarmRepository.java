@@ -4,25 +4,19 @@ import exceptions.EntityNotFoundException;
 import models.Farm;
 import models.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static persistence.DBConnection.getConnectionFromInstance;
-
-public class FarmRepository implements GenericRepository<Farm> {
-    private final Connection conn;
+public class FarmRepository extends EntityRepository implements GenericRepository<Farm> {
     private static FarmRepository instance;
 
-    private Map<String, Farm> allFarmsStorage = new HashMap<>();
+    private Map<String, Farm> farmStorage = new HashMap<>();
 
     private final UserRepository userRepository = UserRepository.getInstance();
 
-    private FarmRepository() {
-        this.conn = getConnectionFromInstance();
-    }
+    private FarmRepository() {super();}
 
     public static FarmRepository getInstance(){
         if(instance == null){
@@ -49,7 +43,7 @@ public class FarmRepository implements GenericRepository<Farm> {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        allFarmsStorage.put(farm.getFarmId(), farm);
+        farmStorage.put(farm.getFarmId(), farm);
         return farm;
     }
 
@@ -65,7 +59,7 @@ public class FarmRepository implements GenericRepository<Farm> {
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
-        return new ArrayList<>(allFarmsStorage.values());
+        return new ArrayList<>(farmStorage.values());
     }
 
 
@@ -85,7 +79,7 @@ public class FarmRepository implements GenericRepository<Farm> {
             Farm farm = new Farm(farmName, owner, address, email, phone, budget);
             farm.setFarmId(farmId);
 
-            allFarmsStorage.put(farmId, farm);
+            farmStorage.put(farmId, farm);
         }
     }
 
@@ -97,17 +91,15 @@ public class FarmRepository implements GenericRepository<Farm> {
             statement.setString(1, id);
             statement.setString(2, id);
             ResultSet rs = statement.executeQuery();
-            System.out.println("Queried userId = '" + id + "'");
+            //System.out.println("Queried userId = '" + id + "'");
             //System.out.println(rs.next());
             while(rs.next()){
                 farmId = rs.getString("farm_id");
-
-                System.out.println("In map? " + allFarmsStorage.containsKey(farmId));
             }
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(farmId).map(allFarmsStorage::get);
+        return Optional.ofNullable(farmId).map(farmStorage::get);
     }
 
 
@@ -130,7 +122,7 @@ public class FarmRepository implements GenericRepository<Farm> {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        allFarmsStorage.put(farm.getFarmId(), farm);
+        farmStorage.put(farm.getFarmId(), farm);
     }
 
     @Override
@@ -144,6 +136,6 @@ public class FarmRepository implements GenericRepository<Farm> {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        allFarmsStorage.remove(farm.getFarmId());
+        farmStorage.remove(farm.getFarmId());
     }
 }

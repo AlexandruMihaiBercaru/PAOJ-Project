@@ -27,7 +27,6 @@ public class UserService {
         farmList = farmRepository.findAll();
     }
 
-
     public User addNewUser(User newUuser) {
         return userRepository.save(newUuser);
     }
@@ -40,24 +39,5 @@ public class UserService {
     public void retrieveAllUsers(){
         userList = userRepository.findAll();
     }
-
-
-//    public FarmService getFarmServiceAttachedToUser(User user){
-//        for (var farmService : allFarms){
-//            if(farmService.getFarm().getOwner().equals(user)){
-//                return farmService;
-//            }
-//        }
-//        return null;
-//    }
-
-//    public void getAllFarms(){
-//        for(var farmService: allFarms){
-//            if(farmService != null){
-//                System.out.println(farmService.getFarm());
-//            }
-//        }
-//    }
-
 
 }

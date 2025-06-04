@@ -32,7 +32,8 @@ CREATE TABLE crop(
     life_cycle      VARCHAR2(10)    CHECK(life_cycle IN ('annual', 'biennial', 'perennial')),
     CONSTRAINT pk_crop PRIMARY KEY(crop_id)
 );
-
+SELECT * FROM crop
+;
 
 CREATE TABLE seeds_lot(
     seeds_lot_id                VARCHAR2(10),
@@ -76,8 +77,8 @@ CREATE TABLE arable_land(
     planting_date       DATE,
     is_cultivated       VARCHAR2(3)      CHECK(is_cultivated IN ('yes', 'no')),
     CONSTRAINT pk_arable_land PRIMARY KEY(land_lot_id),
-    CONSTRAINT fk_arable_lot FOREIGN KEY(land_lot_id) REFERENCES land_lot(land_lot_id),
-    CONSTRAINT fk_arable_seeds FOREIGN KEY(seeds_id) REFERENCES farm_seeds(seeds_id)
+    CONSTRAINT fk_arable_lot FOREIGN KEY(land_lot_id) REFERENCES land_lot(land_lot_id) ON DELETE CASCADE,
+    CONSTRAINT fk_arable_seeds FOREIGN KEY(seeds_id) REFERENCES farm_seeds(seeds_id) ON DELETE CASCADE
 );
 
 CREATE TABLE orchard(
@@ -85,8 +86,8 @@ CREATE TABLE orchard(
     crop_id             VARCHAR2(6),
     age                 NUMBER(3),
     CONSTRAINT pk_orchard PRIMARY KEY(land_lot_id),
-    CONSTRAINT fk_orachrd_lot FOREIGN KEY(land_lot_id) REFERENCES land_lot(land_lot_id),
-    CONSTRAINT fk_orchard_crop FOREIGN KEY(crop_id) REFERENCES crop(crop_id)
+    CONSTRAINT fk_orachrd_lot FOREIGN KEY(land_lot_id) REFERENCES land_lot(land_lot_id) ON DELETE CASCADE,
+    CONSTRAINT fk_orchard_crop FOREIGN KEY(crop_id) REFERENCES crop(crop_id) ON DELETE CASCADE
 );
 
 
@@ -98,14 +99,20 @@ CREATE TABLE harvest(
     harvest_date        DATE,
     yielded_quantity    NUMBER(10,2),
     on_sale             VARCHAR2(3)     CHECK(on_sale IN('yes', 'no')),
-    quantity_on_sale    NUMBER(10,2),
     CONSTRAINT pk_harvest PRIMARY KEY(harvest_id),
     CONSTRAINT fk_harvest_farm FOREIGN KEY(farm_id) REFERENCES farm(farm_id) ON DELETE CASCADE,
     CONSTRAINT fk_harvest_seeds FOREIGN KEY(seeds_id) REFERENCES  farm_seeds(seeds_id) ON DELETE CASCADE,
-    CONSTRAINT fk_harvest_land_lot FOREIGN KEY(land_lot_id) REFERENCES land_lot(land_lot_id) ON DELETE SET NULL,
-    CONSTRAINT check_qnt CHECK(quantity_on_sale < yielded_quantity)
+    CONSTRAINT fk_harvest_land_lot FOREIGN KEY(land_lot_id) REFERENCES land_lot(land_lot_id) ON DELETE SET NULL
 );
 
+
+CREATE TABLE harvest_on_sale(
+    harvest_id          VARCHAR2(10) PRIMARY KEY,
+    quantity_on_sale    NUMBER,
+    quantity_sold       NUMBER,
+    sale_price          NUMBER(10, 2),
+    CONSTRAINT fk_harv FOREIGN KEY(harvest_id) REFERENCES harvest(harvest_id) ON DELETE CASCADE
+);
 
 INSERT INTO crop(crop_id, scientific_name, cultivar, common_name, life_cycle) 
     VALUES ('a1b2c3', 'Raphanus sativus', 'Johanna', 'Ridichi de luna', 'annual');
@@ -128,9 +135,34 @@ INSERT INTO seeds_lot VALUES('eee', 'c00003', 'Mai', 'Septembrie', 40, 'kg', 8, 
 
 
 ALTER TABLE farm DROP CONSTRAINT fk_farm_user;
-ALTER TABLE farm MODIFY user_id VARCHAR2(32);
+ALTER TABLE farm MODIFY phone_no VARCHAR2(15);
 DROP TABLE app_user;
 ALTER TABLE farm ADD CONSTRAINT fk_farm_user FOREIGN KEY(user_id) REFERENCES app_user(user_id) ON DELETE CASCADE;
 
+ALTER TABLE harvest DROP CONSTRAINT check_qnt;
+ALTER TABLE harvest DROP COLUMN quantity_on_sale;
 --DESCRIBE app_user;
 --DESCRIBE farm;
+
+DELETE FROM app_user WHERE 1=1;
+SELECT * FROM app_user;
+commit;
+SELECT * FROM farm; where user_id = '7f7dbcc4-b2d5-47e1-b6c7-001a7c9d8a28' OR farm_name = '7f7dbcc4-b2d5-47e1-b6c7-001a7c9d8a28';
+
+SELECT * FROM farm_seeds;
+
+ALTER TABLE farm_seeds ADD farm_id VARCHAR2(6);
+ALTER TABLE farm_seeds ADD CONSTRAINT fk_farm_seeds FOREIGN KEY (farm_id) REFERENCES farm(farm_id) ON DELETE CASCADE;
+commit;
+
+
+SELECT * FROM USER_CONSTRAINTS WHERE UPPER(TABLE_NAME) LIKE 'CROP';
+ALTER TABLE CROP DROP CONSTRAINT SYS_C008237;
+SELECT * FROM arable_land;
+
+DELETE FROM land_lot where 1=1;
+
+commit;
+
+ALTER TABLE land_lot MODIFY lot_name VARCHAR(50);
+

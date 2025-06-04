@@ -1,34 +1,41 @@
 package models;
 
+import utils.RandomStringGenerator;
+
 public class SeedsLot {
 
-    private int lotId;
+    private String lotId;
     private Crop cropType;
     private String plantingPeriod;
     private String harvestingPeriod;
     private double pricePerUnit;
+    private SaleUnit saleUnit;
     private int plantsPerSqMeter;
     private int expectedYieldPerSqMeter;
     private int availableQuantity;
 
-    private static int internalId = 1;
 
 
-    public SeedsLot(String scientificName, String commonName, PlantLifeCycle type, String cultivar,
-                    String plantingPeriod, String harvestingPeriod, double pricePerUnit, int plantsPerSqMeter, int expectedYieldPerSqMeter, int availableQuantity) {
-        this.lotId = internalId++;
-        this.cropType = new Crop(scientificName, cultivar, commonName, type);
+
+    public SeedsLot(Crop crop, String plantingPeriod,
+                    String harvestingPeriod, double pricePerUnit,
+                    String saleUnit, int plantsPerSqMeter,
+                    int expectedYieldPerSqMeter, int availableQuantity) {
+
+        this.cropType = crop;
         this.plantingPeriod = plantingPeriod;
         this.harvestingPeriod = harvestingPeriod;
         this.pricePerUnit = pricePerUnit;
+        this.saleUnit = SaleUnit.fromCode(saleUnit);
         this.plantsPerSqMeter = plantsPerSqMeter;
         this.expectedYieldPerSqMeter = expectedYieldPerSqMeter;
         this.availableQuantity = availableQuantity;
     }
 
+
     // copy constructor
     public SeedsLot(SeedsLot oldLot, int availableQuantity) {
-        this.lotId = oldLot.getLotId();
+        //this.lotId = oldLot.getLotId();
         this.cropType = oldLot.getCropType();
         this.plantingPeriod = oldLot.getPlantingPeriod();
         this.harvestingPeriod = oldLot.getHarvestingPeriod();
@@ -42,18 +49,21 @@ public class SeedsLot {
         return cropType;
     }
 
-    public static SeedsLot parseSeed(String line){
-        String[] tokens = line.split(",");
-        PlantLifeCycle plant = PlantLifeCycle.getPlantTypeValue(tokens[2].charAt(0));
-        SeedsLot seedsLot = new SeedsLot(tokens[0], tokens[1], plant, tokens[3], tokens[4],
-                tokens[5], Double.parseDouble(tokens[6]), Integer.parseInt(tokens[7]), Integer.parseInt(tokens[8]), Integer.parseInt(tokens[9]));
-        return seedsLot;
-    }
+//    public static SeedsLot parseSeed(String line){
+//        String[] tokens = line.split(",");
+//        PlantLifeCycle plant = PlantLifeCycle.getPlantTypeValue(tokens[2].charAt(0));
+//        SeedsLot seedsLot = new SeedsLot(tokens[0], tokens[1], plant, tokens[3], tokens[4],
+//                tokens[5], Double.parseDouble(tokens[6]), Integer.parseInt(tokens[7]), Integer.parseInt(tokens[8]), Integer.parseInt(tokens[9]));
+//        return seedsLot;
+//    }
+
+
 
 
     public void printInfo() {
         System.out.println(
-                "LOTID: " + lotId + "\n" +
+                "================================================" +
+                "LOT_ID: " + lotId + "\n" +
                 "SCIENTIFIC NAME:" + this.cropType.getScientificName() + '\n' +
                 "COMMON NAME: " + this.cropType.getCommonName() + '\n' +
                 "CULTIVAR: " + this.cropType.getCultivar() + '\n' +
@@ -61,15 +71,23 @@ public class SeedsLot {
                 "PLANTING PERIOD: " + plantingPeriod + '\n' +
                 "HARVESTING PERIOD: " + harvestingPeriod + '\n' +
                 "PRICE PER UNIT: " + pricePerUnit + '\n' +
+                "SALE UNIT: " + saleUnit + '\n' +
                 "PLANTS PER m^2 (recommended): " + plantsPerSqMeter + '\n' +
                 "EXPECTED YIELD PER m^2: " + expectedYieldPerSqMeter + '\n' +
-                "AVAILABLE QUANTITY: " + availableQuantity+ '\n' +
-                "----------------------------------------"
+                "AVAILABLE QUANTITY: " + availableQuantity+ '\n'
         );
     }
 
-    public int getLotId() {
+    public String getLotId() {
         return lotId;
+    }
+
+    public void setLotId(String lotId) {
+        this.lotId = lotId;
+    }
+
+    public void setLotId(){
+        this.lotId = RandomStringGenerator.newString(10);
     }
 
     public int getAvailableQuantity() {
@@ -98,6 +116,14 @@ public class SeedsLot {
 
     public void setAvailableQuantity(int availableQuantity) {
         this.availableQuantity = availableQuantity;
+    }
+
+    public Crop getCrop() {
+        return cropType;
+    }
+
+    public SaleUnit getSaleUnit(){
+        return saleUnit;
     }
 
     @Override

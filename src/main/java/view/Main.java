@@ -1,11 +1,10 @@
 package view;
 
 import controllers.FarmController;
+import controllers.SeedsLotController;
 import controllers.UserController;
 import models.User;
-import services.FarmService;
-import services.SeedService;
-import services.UserService;
+import utils.AuditService;
 
 import java.util.Scanner;
 
@@ -14,6 +13,7 @@ public class Main {
 
         UserController uc = new UserController();
         FarmController fc = new FarmController();
+        SeedsLotController slc = new SeedsLotController();
 
         User currentUser = null;
 
@@ -30,11 +30,15 @@ public class Main {
                 switch (choice) {
                     case 1:
                         enterApp = true;
+                        AuditService.logSystemAction("register_new_user");
                         currentUser = UserInteractions.newUserInputs(sc, uc);
+
                         break;
                     case 2:
                         enterApp = true;
+                        AuditService.logSystemAction("login_user");
                         currentUser = UserInteractions.loginCredentials(sc, uc);
+
                         break;
                     case 3:
                         sc.close();
@@ -47,7 +51,8 @@ public class Main {
             }
             if (currentUser != null && currentUser.getRole().equalsIgnoreCase("farmer")){
                 DisplayMenu.displayFarmersMenu();
-                //FarmService currentFarmService = userService.getFarmServiceAttachedToUser(currentUser);
+                AuditService.logSystemAction("attached_farm_to_user_scope");
+                fc.attachUserToFarm(currentUser);
                 while(true){
                     System.out.println("Your choice: ");
                     choice = Integer.parseInt(sc.nextLine());
@@ -58,28 +63,39 @@ public class Main {
                                 System.out.println("Changes were saved, back to the main menu....\n");
                                 enterApp = false;
                                 break;
-                            /*case 1:
-                                currentFarmService.updateContactInfo(sc);
+                            case 1:
+                                AuditService.logSystemAction("update_farm_contact_info");
+                                UserInteractions.updateContactInformation(sc, fc);
                                 break;
                             case 2:
-                                currentFarmService.checkFunds();
+                                AuditService.logSystemAction("check_balance");
+                                fc.checkFunds();
                                 break;
                             case 3:
-                                seedService.inspectSeedMarket();
+                                AuditService.logSystemAction("inspect_seed_market");
+                                slc.printSeedLotsListedForSale();
                                 break;
                             case 4:
-                                seedService.buySeeds(sc, currentFarmService);
-                                currentFarmService.checkFunds();
+                                AuditService.logSystemAction("buy_seeds");
+                                fc.buySeeds(sc);
+                                fc.checkFunds();
                                 break;
                             case 5:
-                                currentFarmService.showInventory();
+                                AuditService.logSystemAction("list_seed_inventory");
+                                fc.listSeedInventory();
                                 break;
                             case 6:
-                                currentFarmService.createLandParcel(sc);
+                                AuditService.logSystemAction("add_land_lot");
+                                fc.addLandLot(sc);
                                 break;
                             case 7:
-                                currentFarmService.viewFarmLand();
-                                break;*/
+                                AuditService.logSystemAction("view_all_land_lots");
+                                fc.viewFarmLand();
+                                break;
+                            case 8:
+                                AuditService.logSystemAction("plant_seeds");
+                                fc.plantSeeds(sc);
+                                break;
                             default:
                                 System.out.println("Wrong choice. Try again.");
                                 System.out.println("Enter your choice: ");
@@ -104,6 +120,7 @@ public class Main {
                             enterApp = false;
                             break;
                         case 1:
+                            AuditService.logSystemAction("list_farm_contact_info");
                             fc.listAllFarmsContactInformation();
                             break;
                         default:

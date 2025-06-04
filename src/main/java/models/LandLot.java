@@ -1,19 +1,70 @@
 package models;
 
+import utils.RandomStringGenerator;
+
 public class LandLot {
 
-    private String parcelId;
+    private String landId;
+    protected String landName;
     private double area;
-    private String usage;
+    private String landUsage;
+    protected String farmId;
 
-    public LandLot(String parcelId, double area, String usage) {
-        this.parcelId = parcelId;
+    public LandLot(String landName, double area, String usage, String farmId) {
+        this.landName = landName;
         this.area = area;
-        this.usage = usage;
+        this.landUsage = usage;
+        this.farmId = farmId;
     }
+
+    public String getLandId() {
+        return landId;
+    }
+
+    public void setLandId(String landId) {
+        this.landId = landId;
+    }
+
+    public String getLandName() {
+        return landName;
+    }
+
+    public void setLandName(String landName) {
+        this.landName = landName;
+    }
+
+    public double getArea() {
+        return area;
+    }
+
+    public void setArea(double area) {
+        this.area = area;
+    }
+
+    public String getLandUsage() {
+        return landUsage;
+    }
+
+    public void setLandUsage(String landUsage) {
+        this.landUsage = landUsage;
+    }
+
+    public String getFarmId() {
+        return farmId;
+    }
+
+    public void setFarmId(String farmId) {
+        this.farmId = farmId;
+    }
+
+    public void setLandId(){
+        this.landId = RandomStringGenerator.newString(10);
+    }
+
 
     @Override
     public String toString() {
-        return "ID: " + parcelId + "\nSIZE: " + area + "\n";
+        return  "===================================\n" +
+                "ID: " + landName + "\nSIZE: " + area + "\n";
     }
 }

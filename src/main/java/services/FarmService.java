@@ -3,6 +3,9 @@ package services;
 import exceptions.EntityNotFoundException;
 import models.*;
 import persistence.FarmRepository;
+import persistence.FarmSeedsRepository;
+import persistence.HarvestRepository;
+import persistence.LandLotRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +16,16 @@ import java.util.Scanner;
 public class FarmService {
 
     private final FarmRepository farmRepository = FarmRepository.getInstance();
+    private final FarmSeedsRepository farmSeedsRepository = FarmSeedsRepository.getInstance();
+    private final LandLotRepository landLotRepository = LandLotRepository.getInstance();
+    private final HarvestRepository harvestRepository = HarvestRepository.getInstance();
 
     private User farmOwner;
-    private Farm farm;
-    //private int landParcelsCount = 0;
 
-    public FarmService() {
-        //this.farmOwner = farmOwner;
+    public FarmService() {}
+
+    public FarmService(User farmOwner) {
+        this.farmOwner = farmOwner;
     }
 
     public Farm addNewFarm(Farm newFarm) {
@@ -45,56 +51,49 @@ public class FarmService {
         return (ArrayList<Farm>) farmRepository.findAll();
     }
 
-
-
-    public void checkFunds(){
-        System.out.println("\nYou have " + this.farm.getBudget() + " RON left in your account.\n" +
-                "-------------------------");
+    public void updateCurrentFarm(Farm farm){
+        farmRepository.update(farm);
     }
 
-    public void createLandParcel(Scanner sc) {
-        System.out.println("Parcel ID: ");
-        String parcelId = sc.nextLine();
-        System.out.println("Size: ");
-        double size = Double.parseDouble(sc.nextLine());
-        System.out.println("Usage: (cultivation)"); // will be extended to include pasture, permanent crops (orchard / vineyard)
-        String usage = sc.nextLine();
-
-        LandLot newLand;
-        if (usage.equals("cultivation"))
-        {
-            newLand = new ArableLand(parcelId, size, usage);
-            this.farm.addLandParcel(newLand);
-            System.out.println("Your farmland has just expanded!\n");
-        }
+    public OwnedSeeds addSeedsToFarmInventory(OwnedSeeds seeds){
+        return farmSeedsRepository.save(seeds);
     }
 
-    public void viewFarmLand(){
-        boolean existsOne = false;
-        for(var parcel : this.farm.getFarmLand()){
-            existsOne = true;
-            System.out.println(parcel);
-            System.out.println("-------------------------");
-        }
-        if(!existsOne)
-            System.out.println("Wow...no farmland!\n");
+    public ArrayList<OwnedSeeds> getSeedsInventory(Farm farm){
+        return farmSeedsRepository.findAllByFarmId(farm.getFarmId());
     }
 
-    public void updateContactInfo(Scanner sc){
-        System.out.println("New email");
-        String email = sc.nextLine();
-        System.out.println("New phone number");
-        String phone = sc.nextLine();
-
-        this.farm.setEmail(email);
-        this.farm.setPhone(phone);
-
-        System.out.println("The contact information has been updated.\n");
-
+    public ArrayList<Harvest> getHarvestsInInventory(Farm farm){
+        return harvestRepository.findAllByFarmId(farm.getFarmId());
     }
 
-    public void showInventory(){
-        SeedInventory seedInventory = (SeedInventory)farm.getInventory().get(0);
-        seedInventory.listInventory();
+    public User getFarmOwner() {
+        return farmOwner;
+    }
+
+    public void setFarmOwner(User farmOwner) {
+        this.farmOwner = farmOwner;
+    }
+
+    public ArrayList<LandLot> getLandByFarmId(String farmId) {
+        return landLotRepository.findAllByFarmId(farmId);
+    }
+
+    public LandLot addLandLotToFarm(LandLot landLot){
+        return landLotRepository.save(landLot);
+    }
+
+    public OwnedSeeds getSeedsByLotName(String seedId, Farm farm) {
+        ArrayList<OwnedSeeds> allSeedsfarmSeedsRepository = getSeedsInventory(farm);
+
+        Optional<OwnedSeeds> targetSeedLot = allSeedsfarmSeedsRepository
+                .stream()
+                .filter(seed -> seed.getSeedsId().equals(seedId))
+                .findFirst();
+        return targetSeedLot.orElse(null);
+    }
+
+    public void updateOwnedSeeds(OwnedSeeds seeds){
+        farmSeedsRepository.update(seeds);
     }
 }

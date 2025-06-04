@@ -14,13 +14,11 @@ public class DBConnection {
     private static DBConnection instance;
     private Connection connection;
 
-    // Thread-safe singleton
+
     public static synchronized Connection getConnectionFromInstance() {
         if (instance == null) {
             instance = new DBConnection();
         }
-
-        // Check if connection is still valid
         try {
             if (instance.connection == null || instance.connection.isClosed()) {
                 instance.createConnection();
@@ -29,7 +27,6 @@ public class DBConnection {
             System.err.println("Error checking connection status: " + e.getMessage());
             instance.createConnection();
         }
-
         return instance.connection;
     }
 
@@ -39,16 +36,11 @@ public class DBConnection {
 
     private void createConnection() {
         try {
-            // Load the Oracle JDBC driver
             Class.forName(JDBC_DRIVER);
-
-            // Create connection
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-
             if (this.connection != null) {
                 System.out.println("Connected to the database successfully");
             }
-
         } catch (ClassNotFoundException e) {
             System.err.println("Oracle driver not found: " + e.getMessage());
         } catch (SQLException e) {
@@ -56,7 +48,6 @@ public class DBConnection {
         }
     }
 
-    // close connection when the application shuts down
     public static void closeConnection() {
         if (instance != null && instance.connection != null) {
             try {
@@ -67,6 +58,4 @@ public class DBConnection {
             }
         }
     }
-
-
 }

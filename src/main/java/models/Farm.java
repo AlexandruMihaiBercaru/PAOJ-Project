@@ -3,6 +3,9 @@ package models;
 import utils.RandomStringGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class Farm {
     private String farmId;
@@ -13,7 +16,7 @@ public class Farm {
     private String phone;
     private double budget;
     private ArrayList<LandLot> farmLand;
-    private ArrayList<Inventory> inventory;
+    private Map<String, Inventory> inventory;
 
     // constructor pentru ferma neinitializata (fara owner)
     public Farm(String farmName, String address, String email, String phone, double budget) {
@@ -22,15 +25,15 @@ public class Farm {
         this.email = email;
         this.phone = phone;
         this.budget = budget;
-        this.farmLand = new ArrayList<LandLot>();
-        this.inventory = new ArrayList<Inventory>();
+        this.farmLand = new ArrayList<>();
+        this.inventory = new HashMap<>();
 
         this.farmId = RandomStringGenerator.newString(6);
 
         Inventory seedInventory = new SeedInventory();
         Inventory harvestInventory = new HarvestInventory();
-        inventory.add(seedInventory);
-        inventory.add(harvestInventory);
+        inventory.put("Seeds", seedInventory);
+        inventory.put("Harvests", harvestInventory);
     }
 
     public Farm(String farmName, User owner, String address, String email, String phone, double budget){
@@ -40,7 +43,13 @@ public class Farm {
         this.email = email;
         this.phone = phone;
         this.budget = budget;
+        this.farmLand = new ArrayList<>();
+        this.inventory = new HashMap<>();
 
+        Inventory seedInventory = new SeedInventory();
+        Inventory harvestInventory = new HarvestInventory();
+        inventory.put("Seeds", seedInventory);
+        inventory.put("Harvests", harvestInventory);
     }
 
     public String getFarmName() {
@@ -63,13 +72,14 @@ public class Farm {
         return farmLand;
     }
 
-    public ArrayList<Inventory> getInventory() {
+    public Map<String, Inventory> getInventory() {
         return inventory;
     }
 
     @Override
     public String toString() {
-        return "FARM: " + farmName + "\n" +
+        return "===================================\n" +
+                "FARM: " + farmName + "\n" +
                 "OWNER: " + owner.getFirstName() + " " + owner.getLastName() + "\n" +
                 "ADDRESS: " + address + "\n" +
                 "EMAIL: " + email + "\n" +
@@ -92,7 +102,7 @@ public class Farm {
         this.address = address;
     }
 
-    public void setInventory(ArrayList<Inventory> inventory) {
+    public void setInventory(HashMap<String, Inventory> inventory) {
         this.inventory = inventory;
     }
 
@@ -118,6 +128,10 @@ public class Farm {
 
     public String getPhone() {
         return phone;
+    }
+
+    public void setFarmLand(ArrayList<LandLot> farmLand) {
+        this.farmLand = farmLand;
     }
 }
 

@@ -50,7 +50,7 @@ public class EncryptionDecryptionAES {
         return null;
     }
 
-    // Encrypt method
+
     public String encrypt(String plainText) throws Exception {
         Cipher cipher = Cipher.getInstance(ALGORITHM);
         byte[] iv = new byte[16];
@@ -60,7 +60,6 @@ public class EncryptionDecryptionAES {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
         byte[] cipherText = cipher.doFinal(plainText.getBytes());
 
-        // Combine IV + ciphertext
         byte[] combined = ByteBuffer.allocate(iv.length + cipherText.length)
                 .put(iv)
                 .put(cipherText)
@@ -69,7 +68,7 @@ public class EncryptionDecryptionAES {
         return Base64.getEncoder().encodeToString(combined);
     }
 
-    // Decrypt method
+
     public String decrypt(String encryptedText) throws Exception {
         byte[] combined = Base64.getDecoder().decode(encryptedText);
 

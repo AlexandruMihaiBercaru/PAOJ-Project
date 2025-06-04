@@ -1,22 +1,22 @@
 package models;
 
 public enum PlantLifeCycle {
-    ANUAL('A'), BIENNIAL('B'), PERRENNIAL('P');
+    ANNUAL("annual"), BIENNIAL("biennial"), PERRENNIAL("perennial");
 
-    private char symbol;
+    private final String literal;
 
-    PlantLifeCycle(char symbol){
-        this.symbol = symbol;
+    PlantLifeCycle(String literal){
+        this.literal = literal;
     }
 
-    public char getSymbol() {
-        return symbol;
+    public String getLiteral() {
+        return literal;
     }
 
-    public static PlantLifeCycle getPlantTypeValue(char sym){
-        for(PlantLifeCycle pt : PlantLifeCycle.values()){
-            if(pt.getSymbol() == sym){
-                return pt;
+    public static PlantLifeCycle getPlantTypeValue(String wd){
+        for(PlantLifeCycle plantType : PlantLifeCycle.values()){
+            if(plantType.getLiteral().equals(wd)){
+                return plantType;
             }
         }
         return null;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class SeedInventory extends Inventory {
 
-    private ArrayList<SeedsLot> ownedSeeds;
+    private ArrayList<OwnedSeeds> ownedSeeds;
 
     public SeedInventory(){
         ownedSeeds = new ArrayList<>();
@@ -19,11 +19,11 @@ public class SeedInventory extends Inventory {
     }
 
 
-    public ArrayList<SeedsLot> getOwnedSeeds() {
+    public ArrayList<OwnedSeeds> getOwnedSeeds() {
         return ownedSeeds;
     }
 
-    public void setOwnedSeeds(ArrayList<SeedsLot> ownedSeeds) {
+    public void setOwnedSeeds(ArrayList<OwnedSeeds> ownedSeeds) {
         this.ownedSeeds = ownedSeeds;
     }
 

@@ -8,11 +8,14 @@ import utils.EncryptionDecryptionAES;
 
 public class UserController {
 
-    private final UserService userService = new UserService();
-    private final FarmService farmService = new FarmService();
+    private final UserService userService;
+    private final FarmService farmService ;
     private final EncryptionDecryptionAES enc = EncryptionDecryptionAES.getInstance();
 
-    public UserController() {}
+    public UserController() {
+        userService = new UserService();
+        farmService = new FarmService();
+    }
 
     public boolean usernameExists(String inputUserName){
         return userService.findUserByUsername(inputUserName) != null;
@@ -21,7 +24,7 @@ public class UserController {
     public boolean passwordMatches(String inputUsername, String plainPassword) {
         User user = userService.findUserByUsername(inputUsername);
         try {
-            if (user != null) {
+            if (user != null && enc != null)  {
                 return enc.decrypt(user.getEncryptedPassword()).equals(plainPassword);
             }
         } catch (Exception e) {
@@ -52,23 +55,18 @@ public class UserController {
         if(user != null){
             System.out.println("Login successful!");
             Farm f = farmService.findFarmByUserId(user.getUserId());
-            System.out.println(f);
+            if(f!=null)
+                System.out.println(f);
         }
         return user;
     }
 
-    public void attachFarmToUser(User u, String name, String address, String email, String phone, double budget){
+    public void addNewFarmToCurrentUser(User u, String name, String address, String email, String phone, double budget){
         Farm f = new Farm(name, address, email, phone, budget);
         f.setOwner(u);
         System.out.println(farmService.addNewFarm(f));
 
     }
 
-//    public void register(User user){
-//        try{
-//            userService.addNewUser()
-//        } catch(){
-//
-//        }
-//    }
+
 }

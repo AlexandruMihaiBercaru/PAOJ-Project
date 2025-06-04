@@ -2,17 +2,14 @@ package persistence;
 
 import models.User;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static persistence.DBConnection.getConnectionFromInstance;
+public class UserRepository extends EntityRepository implements GenericRepository<User>, SearchObjectByName<User> {
 
-public class UserRepository implements GenericRepository<User>, SearchObjectByName<User> {
-
-    private final Map<String, User> allUsers = new HashMap<>();
+    private final Map<String, User> userStorage = new HashMap<>();
 
     private static final String INSERT_USER_SQL = "INSERT INTO app_user VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SELECT_ALL_USER_SQL = "SELECT * FROM app_user";
@@ -20,14 +17,10 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
     private static final String DELETE_USER_SQL = "DELETE FROM app_user WHERE user_id = ?";
     private static final String UPDATE_USER_SQL = "UPDATE app_user SET first_name = ?, last_name = ?, username = ?, password = ? WHERE user_id = ?";
 
-    private final Connection conn;
     private static UserRepository instance;
 
-    // folosesc conexiunea creata in DBConnection
-    // constructor privat
-    private UserRepository(){
-        this.conn = getConnectionFromInstance();
-    }
+
+    private UserRepository(){super();}
 
     public static UserRepository getInstance(){
         if(instance == null){
@@ -51,7 +44,7 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        allUsers.put(user.getUserId(), user);
+        userStorage.put(user.getUserId(), user);
         return user;
     }
 
@@ -65,7 +58,7 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return new ArrayList<>(allUsers.values());
+        return new ArrayList<>(userStorage.values());
     }
 
 
@@ -80,7 +73,7 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(allUsers.get(userId));
+        return Optional.ofNullable(userStorage.get(userId));
     }
 
     @Override
@@ -97,7 +90,7 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.ofNullable(id).map(allUsers::get);
+        return Optional.ofNullable(id).map(userStorage::get);
     }
 
     @Override
@@ -113,7 +106,7 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        allUsers.put(user.getUserId(), user);
+        userStorage.put(user.getUserId(), user);
     }
 
     @Override
@@ -125,7 +118,7 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        allUsers.remove(user.getUserId());
+        userStorage.remove(user.getUserId());
     }
 
 
@@ -140,11 +133,11 @@ public class UserRepository implements GenericRepository<User>, SearchObjectByNa
             String role = rs.getString("role");
 
             User user = new User(userId, firstName, lastName, userName, role, encryptedPassword);
-            allUsers.put(userId, user);
+            userStorage.put(userId, user);
         }
     }
 
-    public Map<String, User> getAllUsers() {
-        return allUsers;
+    public Map<String, User> getUserStorage() {
+        return userStorage;
     }
 }
